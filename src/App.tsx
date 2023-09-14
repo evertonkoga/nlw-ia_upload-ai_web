@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Github, Wand2 } from "lucide-react";
 import { Button } from "./components/ui/button";
 import { Separator } from "./components/ui/separator";
@@ -6,8 +7,17 @@ import { Label } from "./components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./components/ui/select";
 import { Slider } from "./components/ui/slider";
 import { VideoInputForm } from "./components/video-inpt-form";
+import { PromptSelect } from "./components/prompt-select";
 
 export function App() {
+  const [temperature, setTemperature] = useState(0.5);
+  const [prompt, setPrompt] = useState<string | null>(null);
+  const [videoId, setVideoId] = useState<string | null>(null);
+
+  function handlePromptSelected(template: string) {
+    setPrompt(template);
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
       <div className="px-6 py-3 flex items-center justify-between border-b">
@@ -31,6 +41,7 @@ export function App() {
         <div className="flex flex-col flex-1 gap-4">
           <div className="grid grid-rows-2 gap-4 flex-1">
             <Textarea 
+              value={prompt}
               className="resize-none p-4 leading-relaxed"
               placeholder="Inclua o prompt para a IA..."
             />
@@ -47,22 +58,14 @@ export function App() {
         </div>
 
         <aside className="w-80 space-y-6">
-          <VideoInputForm />
+          <VideoInputForm onVideoUploaded={setVideoId} />
 
           <Separator />
 
           <form className="space-y-6">
-          <div className="space-y-6">
+            <div className="space-y-6">
               <Label>Prompt</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione um prompt..."/>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="titulo">Titulo do Youtube</SelectItem>
-                  <SelectItem value="descricao">Descrição do Youtube</SelectItem>
-                </SelectContent>
-              </Select>
+              <PromptSelect onPromptSelected={handlePromptSelected} />
             </div>
 
             <Separator />
@@ -87,6 +90,8 @@ export function App() {
             <div className="space-y-4">
               <Label>Temperatura</Label>
               <Slider 
+                value={[temperature]}
+                onValueChange={value => setTemperature(value[0])}
                 min={0}
                 max={1}
                 step={0.1}
