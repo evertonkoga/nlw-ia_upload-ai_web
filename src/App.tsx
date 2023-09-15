@@ -122,7 +122,7 @@ export function App() {
             <Button 
               type="submit" 
               className="w-full"
-              disabled={isLoading}
+              disabled={isLoading || !videoId}
             >
               Executar
               <Wand2 className="w-4 h-4 ml-2"/>
